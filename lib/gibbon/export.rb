@@ -16,8 +16,8 @@ module Gibbon
 
     def call(method, params = {})
       api_url = export_api_url + method + "/"
-      params = @default_params.merge(params).merge({apikey: @api_key})
-      response = self.class.post(api_url, body: MultiJson.dump(params), timeout: @timeout)
+      params = @default_params.merge(params).merge({:apikey => @api_key})
+      response = self.class.post(api_url, :body => MultiJson.dump(params), :timeout => @timeout)
 
       lines = response.body.lines
       if @throws_exceptions
@@ -57,7 +57,7 @@ module Gibbon
       attr_accessor :api_key, :timeout, :throws_exceptions
 
       def method_missing(sym, *args, &block)
-        new(self.api_key, {timeout: self.timeout, throws_exceptions: self.throws_exceptions}).send(sym, *args, &block)
+        new(self.api_key, {:timeout => self.timeout, :throws_exceptions => self.throws_exceptions}).send(sym, *args, &block)
       end
     end
   end
